@@ -1,15 +1,26 @@
-import React from "react";
 import "./App.css";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Canvas, extend, useThree } from "react-three-fiber";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+
+import { useState } from "react";
 
 extend({ OrbitControls });
 
 const Cube = (props) => {
+  const [isBig, setIsBig] = useState(false);
+  const size = isBig ? "2" : "1";
+  const [isHovered, setIsHovered] = useState(false);
+  const color = isHovered ? "black" : "green";
+
   return (
-    <mesh {...props}>
-      <boxGeometry attach="geometry" args={[2, 2, 2]} />
-      <meshStandardMaterial attach="material" color="#69B578" />
+    <mesh
+      {...props}
+      onClick={() => setIsBig(!isBig)}
+      onPointerOver={() => setIsHovered(true)}
+      onPointerOut={() => setIsHovered(false)}
+    >
+      <boxGeometry attach="geometry" args={[size]} />
+      <meshStandardMaterial attach="material" color={color} />
     </mesh>
   );
 };
@@ -22,7 +33,7 @@ const Scene = () => {
   return (
     <>
       <ambientLight />
-      <pointLight rotation={[-1, 2, 4]} intensity={0.3} />
+      <pointLight position={[-1, 2, 4]} />
       <Cube position={[0, 0, 0]} rotation={[10, 10, 0]} />
       <Cube position={[3, 0, 0]} rotation={[10, 20, 0]} />
       <orbitControls args={[camera, domElement]} />
